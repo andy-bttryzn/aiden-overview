@@ -8,13 +8,13 @@ This repository is a public architectural overview. Production code lives in a p
 
 A(I)DEN runs the full vendor lifecycle for the operator:
 
-- **Inbox triage** — Two-layer Gmail model (filters + shortcuts), label-driven state machine, AI-assisted decisions per thread.
-- **Vendor briefs** — Renders the 10-section view of a vendor's current state on demand. Drives every reply.
-- **Contract routing** — Detects legal-flavored emails, routes to counsel with required BCCs, tracks in Airtable until signed, files to Box on close.
-- **monday.com mutations** — Spawns tasks, flips statuses, swaps groups, updates notes. Dedup before create.
-- **Phonexa campaign config** — Active campaign management, tag enforcement, returns-via-ping-back integration.
-- **Disposition ingests** — Daily CSV/XLSX ingests from buyers + affiliates into the Phonexa ping-back endpoint.
-- **Billing reconciliation** — Inbound invoice matching, returns sheets, credit-ask emails to accounting.
+- **Inbox triage**: Two-layer Gmail model (filters + shortcuts), label-driven state machine, AI-assisted decisions per thread.
+- **Vendor briefs**: Renders the 10-section view of a vendor's current state on demand. Drives every reply.
+- **Contract routing**: Detects legal-flavored emails, routes to counsel with required BCCs, tracks in Airtable until signed, files to Box on close.
+- **monday.com mutations**: Spawns tasks, flips statuses, swaps groups, updates notes. Dedup before create.
+- **Phonexa campaign config**: Active campaign management, tag enforcement, returns-via-ping-back integration.
+- **Disposition ingests**: Daily CSV/XLSX ingests from buyers + affiliates into the Phonexa ping-back endpoint.
+- **Billing reconciliation**: Inbound invoice matching, returns sheets, credit-ask emails to accounting.
 
 The unifying property: every step touches a structured vendor record. Tomorrow's brief is richer than today's because today's work fed it.
 
@@ -84,8 +84,8 @@ A(I)DEN runs three concurrent operational lanes:
 
 Newest-first triage of the live inbox. Two layers:
 
-1. **Layer 1 — Gmail filters**: known patterns route to `03.noInbox/{category}` automatically. Noise (system notifications, sister-company cross-talk, marketing) never reaches the operator's view.
-2. **Layer 2 — Manual shortcuts**: for each remaining thread, the operator (or Claude) picks one of *reply / brief / bury / snooze / forward / ingest*. Each shortcut is one keystroke or one slash-command.
+1. **Layer 1 / Gmail filters**: known patterns route to `03.noInbox/{category}` automatically. Noise (system notifications, sister-company cross-talk, marketing) never reaches the operator's view.
+2. **Layer 2 / Manual shortcuts**: for each remaining thread, the operator (or Claude) picks one of *reply / brief / bury / snooze / forward / ingest*. Each shortcut is one keystroke or one slash-command.
 
 ### Old-inbox lane (drain queue)
 
@@ -101,9 +101,9 @@ When a task has multiple independent subtasks, Claude Code dispatches Sonnet sub
 
 Examples of subagent dispatch:
 
-- **Daily audit run** — one Sonnet per buyer board, one per affiliate board, one for Tasks. Three parallel reports stitched together.
-- **Vendor brief prepull** — for each of the next 3 vendors in the queue, one Sonnet fetches monday data + Gmail data + helpful links concurrently. Cache lands on disk; the foreground render is instant.
-- **Mass label sweep** — one Sonnet per label class, each scoped to its own rule set.
+- **Daily audit run**: one Sonnet per buyer board, one per affiliate board, one for Tasks. Three parallel reports stitched together.
+- **Vendor brief prepull**: for each of the next 3 vendors in the queue, one Sonnet fetches monday data + Gmail data + helpful links concurrently. Cache lands on disk; the foreground render is instant.
+- **Mass label sweep**: one Sonnet per label class, each scoped to its own rule set.
 
 The discipline: subagents are dispatched read-only by default. Write subagents require explicit `allowedTools` whitelist and `isolation: worktree` for any repo edits.
 
@@ -144,7 +144,7 @@ Drafts that fail the gate are blocked at staging time, never reach send.
 
 ## CDP automation
 
-Where APIs don't exist or are too slow, Chromium DevTools Protocol drives a real Chrome instance (not Playwright's bundled Chromium — clean flag set, no automation tells):
+Where APIs don't exist or are too slow, Chromium DevTools Protocol drives a real Chrome instance (not Playwright's bundled Chromium; clean flag set, no automation tells):
 
 - Phonexa Lead Index reports (CDP + DOM scrape; lazy session refresh)
 - Phonexa campaign edits (form fill + comment-field guard)
@@ -176,11 +176,11 @@ Three patterns that make A(I)DEN survive a bad week:
 
 Patterns and tooling that survived A(I)DEN's daily production grind, extracted as standalone projects:
 
-- [vendor-ops-playbook](https://github.com/andy-bttryzn/vendor-ops-playbook) — the operating manual
-- [vendor-brief-renderer](https://github.com/andy-bttryzn/vendor-brief-renderer) — the 10-section brief renderer
-- [gworkspace-helper](https://github.com/andy-bttryzn/gworkspace-helper) — the Gmail helper with draft validation
-- [monday-helper](https://github.com/andy-bttryzn/monday-helper) — the monday.com helper
-- [docs-mirror-scraper](https://github.com/andy-bttryzn/docs-mirror-scraper) — the offline-docs crawler
+- [vendor-ops-playbook](https://github.com/andy-bttryzn/vendor-ops-playbook): the operating manual
+- [vendor-brief-renderer](https://github.com/andy-bttryzn/vendor-brief-renderer): the 10-section brief renderer ([live demo](https://andy-bttryzn.github.io/vendor-brief-renderer/demo/))
+- [gworkspace-helper](https://github.com/andy-bttryzn/gworkspace-helper): the Gmail helper with draft validation
+- [monday-helper](https://github.com/andy-bttryzn/monday-helper): the monday.com helper
+- [docs-mirror-scraper](https://github.com/andy-bttryzn/docs-mirror-scraper): the offline-docs crawler
 
 ## What's private
 
